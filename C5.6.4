@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Приложение</title>
+</head>
+<body>
+  <input type="text" id="numberInput1" placeholder="Введите первое число">
+  <input type="text" id="numberInput2" placeholder="Введите второе число">
+  <button id="submitButton">Отправить</button>
+  <div id="resultContainer"></div>
+
+  <script>
+    function makeRequest(url) {
+      return fetch(url)
+        .then(response => {
+          if (response.ok) {
+            return response.blob();
+          } else {
+            throw new Error('Произошла ошибка при выполнении запроса');
+          }
+        });
+    }
+
+    function handleClick() {
+      const numberInput1 = document.getElementById('numberInput1');
+      const numberInput2 = document.getElementById('numberInput2');
+      const inputValue1 = parseInt(numberInput1.value);
+      const inputValue2 = parseInt(numberInput2.value);
+      const resultContainer = document.getElementById('resultContainer');
+
+      if (isNaN(inputValue1) || isNaN(inputValue2) || inputValue1 < 100 || inputValue1 > 300 || inputValue2 < 100 || inputValue2 > 300) {
+        resultContainer.textContent = 'Одно из чисел вне диапазона от 100 до 300 или введено не число';
+      } else {
+        const url = `https://picsum.photos/${inputValue1}/${inputValue2}`;
+        makeRequest(url)
+          .then(imageBlob => {
+            const imageUrl = URL.createObjectURL(imageBlob);
+            resultContainer.innerHTML = `<img src="${imageUrl}" alt="Случайное изображение">`;
+          })
+          .catch(error => {
+            resultContainer.textContent = 'Произошла ошибка при выполнении запроса';
+          });
+      }
+    }
+
+    const submitButton = document.getElementById('submitButton');
+    submitButton.addEventListener('click', handleClick);
+  </script>
+</body>
+</html>
