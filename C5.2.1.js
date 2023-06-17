@@ -1,4 +1,3 @@
-
 const xmlString = `
 <list>
   <student>
